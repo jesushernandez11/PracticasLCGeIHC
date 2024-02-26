@@ -1,11 +1,16 @@
 #pragma once
-#include<glew.h>
+#include <glew.h>
+#include <vector>
+
 class Mesh
 {
 public:
-	Mesh();//Recibe datos de vértices e índices
-	void CreateMesh(GLfloat *vertices,unsigned int *indices, unsigned int numOfVertices, unsigned int numberOfIndices);
+	Mesh();
+	
+	void CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numberOfIndices);
+	void CreateMeshGeometry(std::vector<GLfloat>& vertices, std::vector<unsigned int>& indices, unsigned int numOfVertices, unsigned int numberOfIndices);
 	void RenderMesh();
+	void RenderMeshGeometry();
 	void ClearMesh();
 	~Mesh();
 private:
@@ -13,16 +18,17 @@ private:
 	GLsizei indexCount;
 
 };
+
 class MeshColor
 {
 public:
-	MeshColor(); //sólo recibe vértices
+	MeshColor();
 	void CreateMeshColor(GLfloat *vertices, unsigned int numOfVertices);
 	void RenderMeshColor();
 	void ClearMeshColor();
 	~MeshColor();
 private:
-	GLuint VAO, VBO, IBO;
+	GLuint VAO, VBO;
 	GLsizei  vertexCount;
 };
 

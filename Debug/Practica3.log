@@ -1,0 +1,22 @@
+﻿  practica3.cpp
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica3.cpp")
+  
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica3.cpp")
+  
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(27,36): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(203,16): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(245,32): warning C4244: 'argumento': conversión de 'double' a '_Ty'; posible pérdida de datos
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(245,32): warning C4244:         with
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(245,32): warning C4244:         [
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(245,32): warning C4244:             _Ty=GLfloat
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(245,32): warning C4244:         ]
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(247,32): warning C4244: 'argumento': conversión de 'double' a '_Ty'; posible pérdida de datos
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(247,32): warning C4244:         with
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(247,32): warning C4244:         [
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(247,32): warning C4244:             _Ty=GLfloat
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(247,32): warning C4244:         ]
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(343,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Practica3\practica3.cpp(345,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+  Practica3.vcxproj -> C:\Users\jesus\Documents\Compu grafica\Practicas\PracticasLCGeIHC\Practica3\Debug\Practica3.exe

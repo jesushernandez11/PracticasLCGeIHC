@@ -19,7 +19,7 @@
 //tecla E: Rotar sobre el eje X
 //tecla R: Rotar sobre el eje Y
 //tecla T: Rotar sobre el eje Z
-
+//testing
 
 using std::vector;
 
@@ -33,11 +33,17 @@ Camera camera;
 Window mainWindow;
 vector<Mesh*> meshList;
 vector<Shader>shaderList;
+std::vector<MeshColor*> meshColorList;
 //Vertex Shader
 static const char* vShader = "shaders/shader.vert";
 static const char* fShader = "shaders/shader.frag";
 static const char* vShaderColor = "shaders/shadercolor.vert";
-Sphere sp = Sphere(1.0, 20, 20); //recibe radio, slices, stacks
+static const char* vShader_g = "shaders/shader_g.vert";
+static const char* vShader_b = "shaders/shader_b.vert";
+static const char* vShader_brown = "shaders/shader_brown.vert";
+static const char* vShader_r = "shaders/shader_r.vert";
+static const char* vShader_tree = "shaders/shader_tree.vert";
+Sphere sp = Sphere(1.0, 5, 5); //recibe radio, slices, stacks
 
 
 
@@ -85,23 +91,26 @@ void CrearCubo()
 // Pirámide triangular regular
 void CrearPiramideTriangular()
 {
-	unsigned int indices_piramide_triangular[] = {
-			0,1,2,
-			1,3,2,
-			3,0,2,
-			1,0,3
-
-	};
 	GLfloat vertices_piramide_triangular[] = {
-		-0.5f, -0.5f,0.0f,	//0
-		0.5f,-0.5f,0.0f,	//1
-		0.0f,0.5f, -0.25f,	//2
-		0.0f,-0.5f,-0.5f,	//3
+		-0.3f, -0.52f,0.0f,		0.0f, 1.0f, 0.0f,
+		0.3f, -0.51f,0.0f,		0.0f, 1.0f, 0.0f, //triángulo base verde
+		0.0f, -0.5f,-0.5f,		0.0f, 1.0f, 0.0f,
+		
+		-0.3f, -0.52f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, -0.5f,		1.0f, 0.0f, 0.0f, //triángulo base roja
+		0.0f, 0.25f, -0.17f,	1.0f, 0.0f, 0.0f,
 
+		-0.3f, -0.52f, 0.0f,	0.0f, 0.0f, 1.0f,
+		0.3f, -0.51f, 0.0f,		0.0f, 0.0f, 1.0f, //triángulo base azul
+		0.0f, 0.25f, -0.17f,	0.0f, 0.0f, 1.0f,
+
+		0.0f, -0.5f,-0.5f,		1.0f, 1.0f, 0.0f,
+		0.3f, -0.51f, 0.0f,		1.0f, 1.0f, 0.0f, //triángulo base amarilla
+		0.0f, 0.25f,-0.17f,		1.0f, 1.0f, 0.0f,
 	};
-	Mesh* obj1 = new Mesh();
-	obj1->CreateMesh(vertices_piramide_triangular, indices_piramide_triangular, 12, 12);
-	meshList.push_back(obj1);
+	MeshColor* obj1 = new MeshColor();
+	obj1->CreateMeshColor(vertices_piramide_triangular, 80);
+	meshColorList.push_back(obj1);
 
 }
 /*
@@ -292,9 +301,9 @@ int main()
 
 	CrearCubo();//índice 0 en MeshList
 	CrearPiramideTriangular();//índice 1 en MeshList
-	CrearCilindro(5, 1.0f);//índice 2 en MeshList
-	CrearCono(25, 2.0f);//índice 3 en MeshList
-	CrearPiramideCuadrangular();//índice 4 en MeshList
+	CrearPiramideCuadrangular();//índice 2 en MeshList
+	CrearCilindro(15, 1.0f);//índice 3 en MeshList
+	CrearCono(25, 2.0f);//índice 4 en MeshList
 	CreateShaders();
 	
 	
@@ -344,44 +353,473 @@ int main()
 		//Limpiar la ventana
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Se agrega limpiar el buffer de profundidad
-		shaderList[0].useShader();
-		uniformModel = shaderList[0].getModelLocation();
-		uniformProjection = shaderList[0].getProjectLocation();
-		uniformView = shaderList[0].getViewLocation();
-		uniformColor = shaderList[0].getColorLocation();
+		shaderList[1].useShader();
+		uniformModel = shaderList[1].getModelLocation();
+		uniformProjection = shaderList[1].getProjectLocation();
+		uniformView = shaderList[1].getViewLocation();
+		
 		
 		model = glm::mat4(1.0);
 		//Traslación inicial para posicionar en -Z a los objetos
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -4.01f));
 		//otras transformaciones para el objeto
-		//model = glm::scale(model, glm::vec3(0.5f,0.5f,0.5f));
-		model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
-		model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model,  170*toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));		
 		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
 		//se programe cambio entre proyección ortogonal y perspectiva
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-		color = glm::vec3(1.0f, 0.0f, 1.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color)); //para cambiar el color del objetos
-		meshList[0]->RenderMesh(); //dibuja cubo y pirámide triangular
-		//meshList[3]->RenderMeshGeometry(); //dibuja las figuras geométricas cilindro, cono, pirámide base cuadrangular
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.0f, 0.92f, -3.96f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.0f, 0.84f, -3.92f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+		
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.01f, 0.885f, -3.97f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, -60 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 200 * toRadians, glm::vec3(0.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, -12 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+		//meshList[4]->RenderMeshGeometry(); //dibuja las figuras geométricas cilindro, cono, 
 		//sp.render(); //dibuja esfera
 		
-		
-		/*
-		//ejercicio: Instanciar primitivas geométricas para recrear el dibujo de la práctica pasada en 3D,
-		//se requiere que exista piso y la casa tiene una ventana azul circular justo en medio de la pared trasera y solo 1 puerta frontal.
-		model = glm::mat4(1.0f);
-		color=glm::vec3(0.0f,1.0f,0.0f);
-		//Opcional duplicar esta traslación inicial para posicionar en -Z a los objetos en el mismo punto
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.75f, -2.5f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
-		meshList[1]->RenderMeshGeometry();
-		*/
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.045f, 0.92f, -4.035f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.01f, 0.805f, -3.925f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, -60 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 200 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, -10 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.045f, 0.84f, -3.985f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.05f, 0.805f, -3.985f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, -60 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 200 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, -10 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.08f, 0.84f, -4.05f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.005f, 0.885f, -3.97f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 50 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 165 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, -10 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.037f, 0.92f, -4.032f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.01f, 0.805f, -3.925f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 50 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 165 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, -10 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.03f, 0.84f, -3.99f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.038f, 0.805f, -4.0f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 50 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 165 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, -10 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.062f, 0.84f, -4.06f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.0f, 0.9f, -4.04f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, 30 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.045f, 0.82f, -4.06f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, 30 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.012f, 0.84f, -4.06f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 170 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.028f, 0.82f, -4.065f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, 30 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.01f, 0.84f, -3.957f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 230 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(-0.043f, 0.84f, -4.035f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 230 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+
+		model = glm::mat4(1.0);
+		//Traslación inicial para posicionar en -Z a los objetos
+		model = glm::translate(model, glm::vec3(0.03f, 0.84f, -4.03f));
+		//otras transformaciones para el objeto
+		model = glm::rotate(model, 230 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//se programe cambio entre proyección ortogonal y perspectiva
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		meshColorList[0]->RenderMeshColor(); //dibuja cubo y pirámide triangular y pirámide base cuadrangular
+		//
+		//
+		////ejercicio: Instanciar primitivas geométricas para recrear el dibujo de la práctica pasada en 3D,
+		////se requiere que exista piso y la casa tiene una ventana azul circular justo en medio de la pared trasera y solo 1 puerta frontal.
+		//model = glm::mat4(1.0f);
+		////color=glm::vec3(0.0f,0.0f,1.0f);
+		////Opcional duplicar esta traslación inicial para posicionar en -Z a los objetos en el mismo punto
+		//model = model = glm::translate(model, glm::vec3(0.0f, -0.2f, -4.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		//meshList[2]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(-0.5f, 0.15f, -3.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(0.5f, 0.15f, -3.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+		//
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(0.0f, -0.9f, -3.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.478f, 0.255f, 0.067f);
+		//model = glm::translate(model, glm::vec3(2.5f, -0.85f, -4.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.478f, 0.255f, 0.067f);
+		//model = glm::translate(model, glm::vec3(-2.5f, -0.85f, -4.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 0.5f, 0.0f);
+		//model = glm::translate(model, glm::vec3(2.5f, -0.25f, -4.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[2]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 0.5f, 0.0f);
+		//model = glm::translate(model, glm::vec3(-2.5f, -0.25f, -4.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[2]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(1.0f, 0.15f, -3.5f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(1.0f, 0.15f, -4.5f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0);
+		////Traslación inicial para posicionar en -Z a los objetos
+		//model = glm::translate(model, glm::vec3(0.0f, -0.4f, -5.0f));
+		////otras transformaciones para el objeto
+		////model = glm::scale(model, glm::vec3(0.5f,0.5f,0.5f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		////la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		////se programe cambio entre proyección ortogonal y perspectiva
+		//glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		//glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		//color = glm::vec3(0.0f, 0.0f, 1.0f);
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////sp.render();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(-1.0f, 0.15f, -3.5f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
+
+		//model = glm::mat4(1.0f);
+		//color = glm::vec3(0.0f, 1.0f, 0.0f);
+		//model = glm::translate(model, glm::vec3(-1.0f, 0.15f, -4.5f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));//FALSE ES PARA QUE NO SEA TRANSPUESTA
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		////meshList[0]->RenderMesh();
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();

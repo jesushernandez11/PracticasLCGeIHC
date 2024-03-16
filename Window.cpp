@@ -136,36 +136,40 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_H)
 	{
-		if (theWindow->articulacion3 >= 0.0f && theWindow->articulacion3 < 45.0f) {
-			theWindow->articulacion3 -= 10.0;
-		}
+		if (theWindow->articulacion3 <= 45.0f && theWindow->articulacion3>-45.0f)
+			theWindow->articulacion3 -= 5.0f;
 		
 	}
 	if (key == GLFW_KEY_J)
 	{
-		if (theWindow->articulacion3 >= 0.0f && theWindow->articulacion3 < 45.0f) {
-			theWindow->articulacion3 += 10.0;
-		}
+		if (theWindow->articulacion3 >= -45.0f && theWindow->articulacion3 < 45.0f)
+			theWindow->articulacion3 += 5.0f;
 	}
 	if (key == GLFW_KEY_K)
 	{
-		theWindow->articulacion5 += 10.0;
+		if (theWindow->articulacion4 <= 45.0f && theWindow->articulacion4 > -45.0f)
+			theWindow->articulacion4 -= 5.0f;
 	}
 	if (key == GLFW_KEY_L)
 	{
-		theWindow->articulacion6 += 10.0;
+		if (theWindow->articulacion4 >= -45.0f && theWindow->articulacion4 < 45.0f)
+			theWindow->articulacion4 += 5.0f;
 	}
 	if (key == GLFW_KEY_M) {
-		theWindow->articulacion7 += 10.0;
+		if (theWindow->articulacion5 <= 45.0f && theWindow->articulacion5 > -45.0f)
+			theWindow->articulacion5 -= 5.0f;
 	}
 	if (key == GLFW_KEY_N) {
-		theWindow->articulacion8 += 10.0f;
+		if (theWindow->articulacion5 >= -45.0f && theWindow->articulacion5 < 45.0f)
+			theWindow->articulacion5 += 5.0f;
 	}
 	if (key == GLFW_KEY_B) {
-		theWindow->articulacion9 += 10.0f;
+		if (theWindow->articulacion6 <= 45.0f && theWindow->articulacion6 > -45.0f)
+			theWindow->articulacion6 -= 5.0f;
 	}
 	if (key == GLFW_KEY_V) {
-		theWindow->articulacion10 += 10.0f;
+		if (theWindow->articulacion6 >= -45.0f && theWindow->articulacion6 < 45.0f)
+			theWindow->articulacion6 += 5.0f;
 	}
 
 

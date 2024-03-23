@@ -127,37 +127,39 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_F)
 	{
-		theWindow->articulacion1 += 10.0;
+		theWindow->articulacion1 -= 10.0;
 	}
 
 	if (key == GLFW_KEY_G)
 	{
-		theWindow->articulacion2 += 10.0;
+		theWindow->articulacion2 -= 10.0;
+		theWindow->articulacion3 -= 10.0f; //movemos llanta delantera izquierda para que simule que avanza con las ruedas
+		theWindow->articulacion4 -= 10.0f;
+		theWindow->articulacion5 -= 10.0f;
+		theWindow->articulacion6 -= 10.0f;
 	}
 	if (key == GLFW_KEY_H)
 	{
-		if (theWindow->articulacion3 <= 45.0f && theWindow->articulacion3>-45.0f)
-			theWindow->articulacion3 -= 5.0f;
-		
+		theWindow->articulacion2 += 10.0;
+		theWindow->articulacion3 += 10.0f;
+		theWindow->articulacion4 += 10.0f;
+		theWindow->articulacion5 += 10.0f;
+		theWindow->articulacion6 += 10.0f;
 	}
 	if (key == GLFW_KEY_J)
 	{
-		if (theWindow->articulacion3 >= -45.0f && theWindow->articulacion3 < 45.0f)
-			theWindow->articulacion3 += 5.0f;
+		theWindow->articulacion3 += 10.0f;
 	}
 	if (key == GLFW_KEY_K)
 	{
-		if (theWindow->articulacion4 <= 45.0f && theWindow->articulacion4 > -45.0f)
-			theWindow->articulacion4 -= 5.0f;
+		theWindow->articulacion4 += 10.0f;
 	}
 	if (key == GLFW_KEY_L)
 	{
-		if (theWindow->articulacion4 >= -45.0f && theWindow->articulacion4 < 45.0f)
-			theWindow->articulacion4 += 5.0f;
+		theWindow->articulacion5 += 10.0f;
 	}
 	if (key == GLFW_KEY_M) {
-		if (theWindow->articulacion5 <= 45.0f && theWindow->articulacion5 > -45.0f)
-			theWindow->articulacion5 -= 5.0f;
+		theWindow->articulacion6 += 10.0f;
 	}
 	if (key == GLFW_KEY_N) {
 		if (theWindow->articulacion5 >= -45.0f && theWindow->articulacion5 < 45.0f)
